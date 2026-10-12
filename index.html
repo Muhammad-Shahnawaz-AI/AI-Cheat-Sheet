@@ -1,0 +1,879 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f8fc">
+  <meta name="description" content="A friendly, practical guide to AI productivity and prompt engineering. Find the right tool, write better prompts, and use AI with confidence.">
+  <title>AI Productivity &amp; Prompt Engineering — Thrive Institute</title>
+  <script>
+    tailwind = { config: { darkMode: "class" } };
+    try {
+      const savedTheme = localStorage.getItem("thrive-ai-theme");
+      if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+      else if (window.matchMedia("(prefers-color-scheme: dark)").matches) document.documentElement.dataset.theme = "dark";
+    } catch {}
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      --page: #f7f8fc;
+      --surface: #ffffff;
+      --surface-soft: #f1f4fa;
+      --surface-tint: #eef3ff;
+      --ink: #172033;
+      --muted: #657089;
+      --line: #e5e9f1;
+      --brand: #5b5ce2;
+      --brand-strong: #4849c9;
+      --brand-wash: #eeefff;
+      --mint: #dff7ee;
+      --mint-ink: #187457;
+      --amber: #fff4d9;
+      --amber-ink: #8a5a00;
+      --rose: #fff0f0;
+      --rose-ink: #a33b43;
+      --shadow: 0 14px 40px rgba(34, 45, 82, .07);
+    }
+    [data-theme="dark"] {
+      color-scheme: dark;
+      --page: #10131d;
+      --surface: #181d2a;
+      --surface-soft: #202738;
+      --surface-tint: #222744;
+      --ink: #edf0fb;
+      --muted: #a5aec2;
+      --line: #2d3547;
+      --brand: #a5a5ff;
+      --brand-strong: #c0c0ff;
+      --brand-wash: #292b4a;
+      --mint: #193b35;
+      --mint-ink: #8de0be;
+      --amber: #3d3220;
+      --amber-ink: #ffd783;
+      --rose: #3e252d;
+      --rose-ink: #ffb8c0;
+      --shadow: 0 14px 40px rgba(0, 0, 0, .22);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 6rem; }
+    body {
+      margin: 0;
+      background: var(--page);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+      transition: background-color .2s, color .2s;
+    }
+    button, input { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    a { color: inherit; }
+    :focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; }
+    .app-shell { max-width: 1500px; margin-inline: auto; }
+    .sidebar {
+      position: fixed; inset: 0 auto 0 max(0px, calc((100vw - 1500px) / 2));
+      z-index: 30; width: 250px; overflow-y: auto; padding: 26px 18px;
+      background: var(--surface); border-right: 1px solid var(--line);
+    }
+    .main-area { min-height: 100vh; margin-left: 250px; }
+    .topbar {
+      position: sticky; top: 0; z-index: 25; display: flex; align-items: center;
+      justify-content: space-between; gap: 16px; min-height: 64px; padding: 10px 34px;
+      background: color-mix(in srgb, var(--page) 86%, transparent);
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 82%, transparent);
+      backdrop-filter: blur(16px);
+    }
+    .brand-mark {
+      display: inline-grid; width: 34px; height: 34px; place-items: center; flex: none;
+      border-radius: 11px; color: white; font-weight: 800;
+      background: linear-gradient(145deg, #7778f3, #4a4bc7);
+      box-shadow: 0 5px 14px rgba(91, 92, 226, .25);
+    }
+    .eyebrow { color: var(--brand); font-size: .72rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+    .nav-link {
+      display: flex; align-items: center; gap: 10px; margin: 3px 0; padding: 9px 10px;
+      color: var(--muted); border-radius: 10px; text-decoration: none; font-size: .86rem; font-weight: 600;
+      transition: color .15s, background .15s;
+    }
+    .nav-link:hover, .nav-link.active { color: var(--brand-strong); background: var(--brand-wash); }
+    .nav-number { display: inline-grid; width: 23px; height: 23px; place-items: center; border-radius: 7px; background: var(--surface-soft); font-size: .68rem; }
+    .content-wrap { max-width: 1160px; margin-inline: auto; padding: 32px 38px 70px; }
+    .hero {
+      position: relative; overflow: hidden; padding: clamp(26px, 5vw, 58px);
+      color: #fff; border-radius: 28px; background: linear-gradient(120deg, #292b67 0%, #4b4cc2 52%, #6c72ec 100%);
+      box-shadow: 0 24px 60px rgba(70, 72, 174, .22);
+    }
+    .hero::before, .hero::after { content: ""; position: absolute; border: 1px solid rgba(255,255,255,.14); border-radius: 50%; pointer-events: none; }
+    .hero::before { width: 420px; height: 420px; right: -80px; top: -235px; }
+    .hero::after { width: 320px; height: 320px; right: 90px; bottom: -250px; }
+    .hero-content { position: relative; z-index: 1; max-width: 750px; }
+    .hero h1 { margin: 12px 0; font-size: clamp(2.2rem, 5vw, 4rem); line-height: 1.04; letter-spacing: -.055em; }
+    .hero p { max-width: 670px; color: rgba(255,255,255,.8); font-size: clamp(1rem, 2vw, 1.15rem); }
+    .hero .eyebrow { color: #c6c7ff; }
+    .key-idea {
+      margin-top: 28px; padding: 17px 20px; border: 1px solid rgba(255,255,255,.21);
+      border-radius: 15px; background: rgba(16, 18, 61, .28); color: #fff;
+    }
+    .key-idea strong { display: block; margin-bottom: 4px; color: #d7d8ff; font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; }
+    .key-idea p { margin: 0; color: rgba(255,255,255,.94); font-size: .98rem; }
+    .hero-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 19px; }
+    .hero-pill { padding: 5px 10px; border: 1px solid rgba(255,255,255,.22); border-radius: 999px; color: rgba(255,255,255,.9); font-size: .75rem; }
+    .search-panel {
+      position: relative; display: flex; align-items: center; gap: 12px; margin: 22px 0 30px;
+      padding: 12px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 15px;
+      box-shadow: 0 5px 18px rgba(34,45,82,.04);
+    }
+    .search-panel input { width: 100%; min-width: 0; color: var(--ink); background: transparent; border: 0; outline: 0; }
+    .search-panel input::placeholder { color: var(--muted); }
+    .search-count { white-space: nowrap; color: var(--muted); font-size: .77rem; }
+    .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin: 58px 0 19px; }
+    .section-heading h2 { margin: 3px 0 0; font-size: clamp(1.55rem, 3vw, 2rem); line-height: 1.2; letter-spacing: -.035em; }
+    .section-heading p { margin: 6px 0 0; color: var(--muted); }
+    .section-index { color: var(--brand); font-size: .74rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    .card {
+      min-width: 0; padding: 23px; background: var(--surface); border: 1px solid var(--line);
+      border-radius: 18px; box-shadow: 0 4px 15px rgba(34,45,82,.025);
+      transition: border-color .2s, box-shadow .2s, opacity .2s, transform .2s;
+    }
+    .card:hover { border-color: color-mix(in srgb, var(--brand) 34%, var(--line)); }
+    .card h3 { margin: 0; font-size: 1.08rem; letter-spacing: -.02em; }
+    .card p { margin: 9px 0 0; color: var(--muted); }
+    .card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; margin-bottom: 13px; }
+    .card-kicker { display: block; margin-bottom: 5px; color: var(--brand); font-size: .68rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+    .card.is-recommended { border-color: var(--brand); box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 15%, transparent), var(--shadow); transform: translateY(-2px); }
+    .recommend-tag { display: none; flex: none; color: var(--brand-strong); background: var(--brand-wash); padding: 4px 8px; border-radius: 99px; font-size: .67rem; font-weight: 800; }
+    .is-recommended .recommend-tag { display: inline-flex; }
+    .role-section { padding: 24px; }
+    .role-pills { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 16px; }
+    .role-btn {
+      padding: 8px 13px; color: var(--muted); background: var(--surface); border: 1px solid var(--line);
+      border-radius: 999px; cursor: pointer; font-size: .82rem; font-weight: 650; transition: .15s;
+    }
+    .role-btn:hover, .role-btn[aria-pressed="true"] { color: var(--brand-strong); background: var(--brand-wash); border-color: var(--brand); }
+    .role-result { display: none; align-items: center; justify-content: space-between; gap: 14px; margin-top: 18px; padding: 14px 16px; border-radius: 12px; background: var(--brand-wash); }
+    .role-result.visible { display: flex; }
+    .role-result p { margin: 0; color: var(--ink); font-size: .88rem; }
+    .role-result a { flex: none; color: var(--brand-strong); font-size: .82rem; font-weight: 800; text-decoration: none; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .table-wrap { overflow-x: auto; margin-top: 14px; border: 1px solid var(--line); border-radius: 12px; }
+    table { width: 100%; border-collapse: collapse; font-size: .84rem; }
+    th, td { padding: 11px 13px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+    th { color: var(--muted); background: var(--surface-soft); font-size: .72rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; }
+    tr:last-child td { border-bottom: 0; }
+    td { color: var(--muted); }
+    td:first-child { color: var(--ink); font-weight: 700; }
+    .role-row { cursor: pointer; transition: background .15s; }
+    .role-row:hover { background: var(--brand-wash); }
+    .role-row td:first-child { color: var(--brand-strong); }
+    .callout { margin-top: 15px; padding: 14px 16px; border-radius: 12px; background: var(--mint); color: var(--mint-ink); font-size: .88rem; }
+    .callout strong { font-weight: 800; }
+    .callout.warning { color: var(--amber-ink); background: var(--amber); }
+    .callout.caution { color: var(--rose-ink); background: var(--rose); }
+    .steps { display: grid; grid-template-columns: repeat(7, minmax(80px, 1fr)); gap: 8px; margin-top: 17px; }
+    .step { padding: 12px 8px; text-align: center; border-radius: 12px; background: var(--surface-soft); }
+    .step span { display: block; margin-bottom: 5px; color: var(--brand); font-size: .68rem; font-weight: 800; text-transform: uppercase; }
+    .step b { font-size: .8rem; }
+    .prompt-box { overflow: hidden; margin-top: 13px; border: 1px solid var(--line); border-radius: 13px; background: var(--surface-soft); }
+    .prompt-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 10px 8px 14px; border-bottom: 1px solid var(--line); }
+    .prompt-label { color: var(--muted); font-size: .72rem; font-weight: 750; }
+    pre {
+      overflow-x: auto; margin: 0; padding: 15px; color: var(--ink); white-space: pre-wrap; overflow-wrap: anywhere;
+      font: .82rem/1.65 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    .copy-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px; flex: none; padding: 6px 9px;
+      color: var(--brand-strong); background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+      cursor: pointer; font-size: .72rem; font-weight: 750; transition: .15s;
+    }
+    .copy-btn:hover { background: var(--brand-wash); border-color: var(--brand); }
+    .copy-btn.copied { color: var(--mint-ink); border-color: var(--mint-ink); }
+    .check-list { display: grid; gap: 9px; margin: 13px 0 0; padding: 0; list-style: none; }
+    .check-list li { position: relative; padding-left: 26px; color: var(--muted); }
+    .check-list li::before { content: "✓"; position: absolute; left: 0; top: 1px; display: grid; width: 18px; height: 18px; place-items: center; border-radius: 6px; color: var(--mint-ink); background: var(--mint); font-size: .72rem; font-weight: 900; }
+    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+    .compare > div { padding: 15px; border: 1px solid var(--line); border-radius: 12px; }
+    .compare .weak { background: var(--rose); border-color: transparent; }
+    .compare .strong { background: var(--mint); border-color: transparent; }
+    .compare b { display: block; margin-bottom: 7px; font-size: .77rem; text-transform: uppercase; letter-spacing: .06em; }
+    .compare p { margin: 0; color: var(--ink); font-size: .87rem; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 13px; }
+    .tag { padding: 5px 9px; color: var(--muted); background: var(--surface-soft); border-radius: 99px; font-size: .74rem; }
+    details.accordion { border: 1px solid var(--line); border-radius: 14px; background: var(--surface); overflow: hidden; }
+    details.accordion + details.accordion { margin-top: 10px; }
+    details.accordion > summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 15px 17px; cursor: pointer; list-style: none; font-weight: 750; }
+    details.accordion > summary::-webkit-details-marker { display: none; }
+    details.accordion > summary::after { content: "+"; color: var(--brand); font-size: 1.25rem; font-weight: 500; }
+    details.accordion[open] > summary::after { content: "−"; }
+    .accordion-content { padding: 0 17px 17px; color: var(--muted); }
+    .accordion-content p:first-child { margin-top: 0; }
+    .plan-week { display: flex; align-items: flex-start; gap: 11px; }
+    .plan-week input { width: 17px; height: 17px; flex: none; margin-top: 3px; accent-color: var(--brand); }
+    .plan-week strong { color: var(--ink); }
+    .footer { margin-top: 50px; padding: 22px 0 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .8rem; }
+    .mobile-nav { display: none; }
+    .no-match { display: none !important; }
+    .toast {
+      position: fixed; z-index: 80; right: 22px; bottom: 22px; padding: 12px 16px;
+      color: #fff; background: #202433; border-radius: 12px; box-shadow: var(--shadow);
+      opacity: 0; transform: translateY(10px); pointer-events: none; transition: .2s;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .icon-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 11px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; cursor: pointer; font-size: .8rem; font-weight: 700; }
+    .icon-btn:hover { background: var(--surface-soft); }
+    .muted-note { color: var(--muted); font-size: .83rem; }
+    .jump-link { color: var(--brand-strong); font-weight: 750; text-decoration: none; }
+    .jump-link:hover { text-decoration: underline; }
+    @media (max-width: 1000px) {
+      .sidebar { width: 218px; }
+      .main-area { margin-left: 218px; }
+      .content-wrap { padding-inline: 26px; }
+      .steps { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+    @media (max-width: 760px) {
+      html { scroll-padding-top: 7.2rem; }
+      .sidebar { display: none; }
+      .main-area { margin-left: 0; }
+      .topbar { min-height: 58px; padding: 9px 16px; }
+      .topbar-name { font-size: .82rem; }
+      .topbar .icon-btn { padding: 7px 9px; }
+      .content-wrap { padding: 20px 16px 52px; }
+      .hero { border-radius: 21px; }
+      .section-heading { margin-top: 44px; }
+      .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .mobile-nav { position: sticky; top: 58px; z-index: 24; display: flex; gap: 6px; overflow-x: auto; padding: 8px 12px; background: var(--surface); border-bottom: 1px solid var(--line); scrollbar-width: none; }
+      .mobile-nav::-webkit-scrollbar { display: none; }
+      .mobile-nav a { flex: none; padding: 5px 10px; color: var(--muted); background: var(--surface-soft); border-radius: 999px; font-size: .73rem; font-weight: 700; text-decoration: none; }
+      .mobile-nav a:hover, .mobile-nav a.active { color: var(--brand-strong); background: var(--brand-wash); }
+    }
+    @media (max-width: 540px) {
+      .grid-2, .grid-3, .compare { grid-template-columns: 1fr; }
+      .card { padding: 18px; }
+      .role-section { padding: 19px; }
+      .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .section-heading { display: block; }
+      .search-panel { padding: 11px 12px; }
+      .search-count { font-size: .68rem; }
+      .table-wrap table { min-width: 570px; }
+      .role-result { align-items: flex-start; flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Guide navigation">
+      <a href="#top" class="flex items-center gap-3 mb-8 no-underline">
+        <span class="brand-mark" aria-hidden="true">✦</span>
+        <span><strong class="block text-sm leading-tight">Thrive Institute</strong><span class="muted-note text-xs">AI productivity guide</span></span>
+      </a>
+      <div class="eyebrow px-2 mb-2">Your field guide</div>
+      <nav>
+        <a class="nav-link" href="#start"><span class="nav-number">0</span> Find your starting point</a>
+        <a class="nav-link" href="#foundations"><span class="nav-number">A</span> Foundations</a>
+        <a class="nav-link" href="#research"><span class="nav-number">B</span> Research &amp; learning</a>
+        <a class="nav-link" href="#prompts"><span class="nav-number">C</span> Prompt engineering</a>
+        <a class="nav-link" href="#create"><span class="nav-number">D</span> Create</a>
+        <a class="nav-link" href="#work"><span class="nav-number">E</span> Work smarter</a>
+        <a class="nav-link" href="#build"><span class="nav-number">F</span> Build &amp; automate</a>
+        <a class="nav-link" href="#safe"><span class="nav-number">G</span> Stay safe</a>
+        <a class="nav-link" href="#library"><span class="nav-number">✦</span> Prompt library</a>
+        <a class="nav-link" href="#glossary"><span class="nav-number">Aa</span> Glossary &amp; action plan</a>
+      </nav>
+      <div class="callout mt-8"><strong>A useful reminder</strong><br>Start with one task you do every week. You don't need to learn it all today.</div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <div class="flex items-center gap-3 min-w-0">
+          <span class="brand-mark md:hidden" aria-hidden="true">✦</span>
+          <span class="topbar-name font-bold truncate">AI Productivity &amp; Prompt Engineering</span>
+        </div>
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Switch to dark mode">
+          <span id="theme-icon" aria-hidden="true">☾</span><span class="hidden sm:inline" id="theme-label">Dark mode</span>
+        </button>
+      </header>
+      <nav class="mobile-nav" aria-label="Quick navigation">
+        <a href="#start">Start</a><a href="#foundations">Foundations</a><a href="#research">Research</a>
+        <a href="#prompts">Prompts</a><a href="#create">Create</a><a href="#work">Work</a>
+        <a href="#build">Build</a><a href="#safe">Safety</a><a href="#library">Library</a>
+      </nav>
+
+      <div class="content-wrap">
+        <section id="top" class="hero">
+          <div class="hero-content">
+            <span class="eyebrow">Thrive Institute · Friendly edition</span>
+            <h1>AI Productivity<br>&amp; Prompt Engineering</h1>
+            <p>A friendly, practical guide for everyone — no technical background needed.</p>
+            <div class="hero-meta">
+              <span class="hero-pill">Easy · start here</span>
+              <span class="hero-pill">Intermediate · build a workflow</span>
+              <span class="hero-pill">Advanced · go deeper</span>
+            </div>
+            <div class="key-idea">
+              <strong>The key idea</strong>
+              <p>AI is not the skill. The real skill is knowing what to ask, which tool to pick, how to describe the job clearly, and when to double-check the answer.</p>
+            </div>
+          </div>
+        </section>
+
+        <div class="search-panel" role="search">
+          <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+          <label class="sr-only" for="guide-search">Search the guide</label>
+          <input id="guide-search" type="search" placeholder="Search prompts, tools, topics…" autocomplete="off">
+          <span class="search-count" id="search-count" aria-live="polite"></span>
+        </div>
+
+        <section id="start" class="card role-section">
+          <div class="card-head">
+            <div><span class="card-kicker">How to use this guide</span><h3>Choose your starting point</h3><p class="muted-note">Pick a role to see a quick win. You can explore the rest whenever you’re ready.</p></div>
+            <span class="recommend-tag">Your starting point</span>
+          </div>
+          <div class="role-pills" role="group" aria-label="Choose your role">
+            <button class="role-btn" data-role="student" aria-pressed="false">Student</button>
+            <button class="role-btn" data-role="teacher" aria-pressed="false">Teacher</button>
+            <button class="role-btn" data-role="business" aria-pressed="false">Business pro</button>
+            <button class="role-btn" data-role="wellness" aria-pressed="false">Wellness / coaching</button>
+            <button class="role-btn" data-role="entrepreneur" aria-pressed="false">Entrepreneur</button>
+            <button class="role-btn" data-role="marketer" aria-pressed="false">Marketer</button>
+            <button class="role-btn" data-role="researcher" aria-pressed="false">Researcher</button>
+            <button class="role-btn" data-role="manager" aria-pressed="false">Manager</button>
+            <button class="role-btn" data-role="developer" aria-pressed="false">Developer</button>
+          </div>
+          <div class="role-result" id="role-result" aria-live="polite">
+            <p id="role-message"></p><a id="role-jump" href="#research">Go to your quick win →</a>
+          </div>
+          <div class="table-wrap mt-5">
+            <table>
+              <thead><tr><th scope="col">You are…</th><th scope="col">Start at</th><th scope="col">First quick win</th></tr></thead>
+              <tbody>
+                <tr class="role-row" data-pick-role="student"><td>Student or learner</td><td>Easy → Intermediate</td><td>Turn one lecture PDF into a quiz</td></tr>
+                <tr class="role-row" data-pick-role="teacher"><td>Teacher or trainer</td><td>Easy → Intermediate</td><td>Make a 10-slide lesson + quiz</td></tr>
+                <tr class="role-row" data-pick-role="business"><td>Office / business pro</td><td>Easy → Intermediate</td><td>Turn meeting notes into actions &amp; follow-up</td></tr>
+                <tr class="role-row" data-pick-role="wellness"><td>Wellness / coaching</td><td>Easy → Intermediate</td><td>Draft a client handout (always review)</td></tr>
+                <tr class="role-row" data-pick-role="entrepreneur"><td>Entrepreneur / freelancer</td><td>Intermediate</td><td>Draft enquiry replies with your approval</td></tr>
+                <tr class="role-row" data-pick-role="marketer"><td>Marketer / content creator</td><td>Easy → Intermediate</td><td>Turn one long piece into a week of posts</td></tr>
+                <tr class="role-row" data-pick-role="researcher"><td>Researcher / analyst</td><td>Intermediate → Advanced</td><td>Deep research + check every source</td></tr>
+                <tr class="role-row" data-pick-role="manager"><td>Manager / leader</td><td>Intermediate</td><td>Pick 3 repeated tasks &amp; measure time saved</td></tr>
+                <tr class="role-row" data-pick-role="developer"><td>Developer / data pro</td><td>Intermediate → Advanced</td><td>Debug a real bug, then add a test</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout"><strong>Try this:</strong> Choose one task you do every week and try the first related prompt. You can feel the difference in under 15 minutes.</div>
+        </section>
+
+        <section id="foundations">
+          <div class="section-heading"><div><span class="section-index">Part A · Foundations</span><h2>Start with the right mindset</h2><p>Choose an assistant for the job, not the brand name.</p></div></div>
+          <div class="grid-2">
+            <article class="card searchable" id="mindset" data-roles="student teacher business wellness entrepreneur marketer researcher manager developer">
+              <div class="card-head"><div><span class="card-kicker">01 · Easy</span><h3>The AI Tool Mindset</h3></div><span class="recommend-tag">Good place to start</span></div>
+              <p>Before asking “Which AI is best?”, ask these seven questions:</p>
+              <ol class="check-list">
+                <li>What exactly do I want done?</li><li>What information does it need?</li>
+                <li>Does this need reasoning, search, files, images, or automation?</li>
+                <li>How important is it that the facts are correct?</li><li>Does it need up-to-date information?</li>
+                <li>Which tool is strongest for this specific job?</li><li>How will I check the result?</li>
+              </ol>
+              <div class="callout"><strong>Core principle:</strong> Choose the tool based on the task, not the brand name.</div>
+            </article>
+            <article class="card searchable" id="assistants">
+              <div class="card-head"><div><span class="card-kicker">02 · Easy</span><h3>Core AI assistants</h3></div></div>
+              <div class="table-wrap"><table>
+                <thead><tr><th>Assistant</th><th>Great at</th><th>Keep in mind</th></tr></thead>
+                <tbody>
+                  <tr><td>ChatGPT</td><td>Writing, coding help, analysis, brainstorming</td><td>Double-check facts and code.</td></tr>
+                  <tr><td>Claude</td><td>Long documents, careful reasoning, writing quality</td><td>Give it the context it needs.</td></tr>
+                  <tr><td>Google Gemini</td><td>Google tools, images, everyday productivity</td><td>Check which features your plan includes.</td></tr>
+                  <tr><td>Microsoft Copilot</td><td>Word, Excel, PowerPoint, Outlook, Teams</td><td>Check your organisation’s data rules.</td></tr>
+                  <tr><td>Others</td><td>Grok, Meta AI, DeepSeek, Mistral, Qwen, Poe, You.com</td><td>Features and plans change; verify before relying on them.</td></tr>
+                </tbody>
+              </table></div>
+              <p class="muted-note">Free and freemium options exist across many tools. Match your choice to your task and privacy needs.</p>
+            </article>
+            <article class="card searchable" id="product-model">
+              <div class="card-head"><div><span class="card-kicker">03 · Easy</span><h3>Product vs. model vs. API</h3></div></div>
+              <div class="grid-3 mt-3">
+                <div class="step"><span>Product</span><b>The app you chat with</b><p class="muted-note">ChatGPT, Claude, Gemini</p></div>
+                <div class="step"><span>Model</span><b>The engine underneath</b><p class="muted-note">GPT, Claude, Gemini, Llama</p></div>
+                <div class="step"><span>API</span><b>A way for software to connect to an engine</b></div>
+              </div>
+              <p>One engine can power many apps; one app may offer different engines. Fast models suit drafts and summaries. Reasoning models suit harder analysis but can take longer and cost more.</p>
+            </article>
+            <article class="card searchable">
+              <div class="card-head"><div><span class="card-kicker">Choose your effort</span><h3>Use the right-sized model</h3></div></div>
+              <ul class="check-list">
+                <li><strong>Quick draft or brainstorm:</strong> a fast, general-purpose assistant is often enough.</li>
+                <li><strong>Multi-step analysis:</strong> consider a reasoning-focused model and give it clear context.</li>
+                <li><strong>High-stakes facts:</strong> use authoritative sources and expert review, whatever the model.</li>
+              </ul>
+              <p class="muted-note">You do not need the strongest model for every little task.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="research">
+          <div class="section-heading"><div><span class="section-index">Part B · Research &amp; learning</span><h2>Learn faster. Verify as you go.</h2><p>Use AI to find and understand information—then check the original sources.</p></div></div>
+          <div class="grid-2">
+            <article class="card searchable" id="research-tools" data-roles="student researcher teacher">
+              <div class="card-head"><div><span class="card-kicker">04 · Intermediate</span><h3>AI search &amp; research tools</h3></div><span class="recommend-tag">Good place to start</span></div>
+              <div class="table-wrap"><table>
+                <thead><tr><th>Tool</th><th>Best for</th><th>Simple workflow</th><th>Avoid</th></tr></thead>
+                <tbody>
+                  <tr><td>Perplexity</td><td>Current web research with sources</td><td>Ask → compare → verify</td><td>Treating a summary as the final source</td></tr>
+                  <tr><td>NotebookLM</td><td>Learning from your PDFs and notes</td><td>Upload → ask → check originals</td><td>Trusting unchecked answers</td></tr>
+                  <tr><td>Google Scholar + AI</td><td>Finding academic papers</td><td>Find → open → extract → verify</td><td>Letting AI invent papers or results</td></tr>
+                </tbody>
+              </table></div>
+              <div class="callout caution"><strong>Important:</strong> Never cite anything you have not opened and confirmed yourself. Titles, authors, and DOIs can be fabricated.</div>
+              <p class="muted-note">Explore: Elicit, Consensus, Scite, SciSpace, ResearchRabbit, Semantic Scholar, Scholarcy.</p>
+            </article>
+            <article class="card searchable" id="tutor" data-roles="student teacher">
+              <div class="card-head"><div><span class="card-kicker">05 · Easy</span><h3>Your patient personal tutor</h3></div><span class="recommend-tag">Good place to start</span></div>
+              <p>Use this learning loop to turn passive reading into active practice:</p>
+              <div class="steps"><div class="step"><span>01</span><b>Assess</b></div><div class="step"><span>02</span><b>Teach</b></div><div class="step"><span>03</span><b>Example</b></div><div class="step"><span>04</span><b>Practice</b></div><div class="step"><span>05</span><b>Test</b></div><div class="step"><span>06</span><b>Feedback</b></div><div class="step"><span>07</span><b>Retry</b></div></div>
+              <p class="muted-note">Ask for everyday analogies, Socratic questions, exercises, feedback on misconceptions, and gradually harder practice.</p>
+              <div class="prompt-box"><div class="prompt-toolbar"><span class="prompt-label">Copy-ready tutor prompt</span><button class="copy-btn" data-copy-target="prompt-tutor">Copy prompt</button></div>
+                <pre id="prompt-tutor">Teach me [TOPIC] from first principles. First assess my level with 5 questions. Then build a progressive lesson. Do not reveal answers before I attempt the exercises. After each attempt, tell me exactly what I misunderstood.</pre></div>
+            </article>
+          </div>
+          <div class="card searchable mt-4" id="research-flow">
+            <div class="card-head"><div><span class="card-kicker">A repeatable research workflow</span><h3>Go from question to grounded answer</h3></div></div>
+            <p>Define your question → run deep research → open key sources → check claims → note gaps → write. AI speeds up discovery and organisation; you remain responsible for validity and conclusions.</p>
+          </div>
+        </section>
+
+        <section id="prompts">
+          <div class="section-heading"><div><span class="section-index">Part C · Prompt engineering</span><h2>Say what you mean. Get something useful.</h2><p>A clear brief turns a vague request into an answer you can actually use.</p></div></div>
+          <div class="grid-2">
+            <article class="card searchable" id="prompt-model">
+              <div class="card-head"><div><span class="card-kicker">06 · Intermediate</span><h3>The 10-part prompt model</h3></div></div>
+              <div class="table-wrap"><table>
+                <thead><tr><th>Part</th><th>Ask yourself</th></tr></thead>
+                <tbody>
+                  <tr><td>1. Role</td><td>What expertise or viewpoint is useful?</td></tr><tr><td>2. Objective</td><td>What must be achieved?</td></tr>
+                  <tr><td>3. Context</td><td>What background does the AI need?</td></tr><tr><td>4. Input</td><td>What information are you providing?</td></tr>
+                  <tr><td>5. Constraints</td><td>What limits apply—length, tone, jargon?</td></tr><tr><td>6. Process</td><td>What stages should it follow?</td></tr>
+                  <tr><td>7. Examples</td><td>What does a good answer look like?</td></tr><tr><td>8. Output</td><td>What exact format do you want?</td></tr>
+                  <tr><td>9. Evaluation</td><td>How will you judge quality?</td></tr><tr><td>10. Safety</td><td>What needs verification or restriction?</td></tr>
+                </tbody>
+              </table></div>
+              <div class="callout"><strong>Beginner shortcut:</strong> Start with Role + Objective + Context + Output. That already beats most one-line prompts.</div>
+            </article>
+            <article class="card searchable" id="weak-strong">
+              <div class="card-head"><div><span class="card-kicker">A small change, a big difference</span><h3>Weak vs. strong prompt</h3></div></div>
+              <div class="compare">
+                <div class="weak"><b>✕ Weak</b><p>“Make me a presentation about AI.”</p></div>
+                <div class="strong"><b>✓ Strong</b><p>“Create a 10-slide presentation for first-year university students. Goal: explain generative AI. Each slide: one central idea, max 30 words, one suggested visual, speaker notes, and a transition to the next slide.”</p></div>
+              </div>
+            </article>
+            <article class="card searchable" id="chaining">
+              <div class="card-head"><div><span class="card-kicker">07 · Intermediate</span><h3>Few-shot prompting &amp; prompt chaining</h3></div></div>
+              <p><strong>Zero-shot</strong> means just ask. <strong>Few-shot</strong> means show 2–5 examples first so the AI can follow your pattern.</p>
+              <p><strong>Prompt chaining</strong> breaks bigger tasks into small, checkable steps:</p>
+              <div class="tag-list"><span class="tag">Question</span><span class="tag">Scope</span><span class="tag">Evidence</span><span class="tag">Analysis</span><span class="tag">Outline</span><span class="tag">Draft</span><span class="tag">Critique</span><span class="tag">Final</span></div>
+              <p>Smaller steps make mistakes easier to catch and correct.</p>
+            </article>
+            <article class="card searchable" id="advanced-prompts">
+              <div class="card-head"><div><span class="card-kicker">08 · Advanced</span><h3>Techniques for when you’re ready</h3></div></div>
+              <div class="tag-list"><span class="tag">Role prompting</span><span class="tag">Few-shot examples</span><span class="tag">Delimiters</span><span class="tag">Structured output</span><span class="tag">Negative constraints</span><span class="tag">Self-critique</span><span class="tag">Step-by-step reasoning</span><span class="tag">Metaprompting</span></div>
+              <p>Clearly separate instructions from input, show examples, request a fixed format, and ask the AI to check its draft against your criteria.</p>
+            </article>
+            <article class="card searchable" id="hallucinations">
+              <div class="card-head"><div><span class="card-kicker">09 · Intermediate</span><h3>When AI makes things up</h3></div></div>
+              <p>AI can invent citations, facts, quotes, numbers, or answers—and sound confident doing it.</p>
+              <ul class="check-list">
+                <li>Provide a source and ask it to use only that text.</li><li>Ask for quotes with page or section numbers.</li>
+                <li>Allow it to say “I don’t know.”</li><li>Use search for current facts; verify numbers with a calculator or code.</li>
+                <li>Cross-check important claims with another source.</li>
+              </ul>
+            </article>
+            <article class="card searchable" id="quality-check">
+              <div class="card-head"><div><span class="card-kicker">Before you use the answer</span><h3>A seven-point quality check</h3></div></div>
+              <ul class="check-list">
+                <li><strong>Accuracy:</strong> Are the claims correct?</li><li><strong>Relevance:</strong> Does it answer the actual task?</li>
+                <li><strong>Completeness:</strong> Are important requirements covered?</li><li><strong>Grounding:</strong> Are key claims supported?</li>
+                <li><strong>Format:</strong> Did it follow your instructions?</li><li><strong>Clarity:</strong> Can the audience understand it?</li>
+                <li><strong>Usability:</strong> Can you actually use the result?</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section id="create">
+          <div class="section-heading"><div><span class="section-index">Part D · Create</span><h2>Make, edit, and share</h2><p>Build useful first drafts, then bring your own judgement and voice.</p></div></div>
+          <div class="grid-2">
+            <article class="card searchable" id="writing" data-roles="teacher marketer wellness entrepreneur">
+              <div class="card-head"><div><span class="card-kicker">10 · Easy</span><h3>Writing, editing &amp; content</h3></div><span class="recommend-tag">Good place to start</span></div>
+              <div class="tag-list"><span class="tag">Idea</span><span class="tag">Outline</span><span class="tag">Draft</span><span class="tag">Critique</span><span class="tag">Revision</span><span class="tag">Fact-check</span><span class="tag">Final</span></div>
+              <p class="muted-note">Tools to explore: Grammarly or LanguageTool (clarity), QuillBot or Wordtune (rewriting), DeepL (translation), Jasper or Copy.ai (marketing drafts).</p>
+              <div class="prompt-box"><div class="prompt-toolbar"><span class="prompt-label">Easy editing prompt</span><button class="copy-btn" data-copy-target="prompt-edit">Copy prompt</button></div>
+                <pre id="prompt-edit">Edit the text below for clarity and concision. Keep my meaning, voice and technical terms. Do not add new facts. Show a list of the main changes, then the edited text.
+
+[PASTE TEXT]</pre></div>
+              <div class="callout warning"><strong>Note:</strong> AI-text detectors are unreliable and can flag human writing. Follow school or workplace disclosure policies instead.</div>
+            </article>
+            <article class="card searchable" id="presentations" data-roles="teacher">
+              <div class="card-head"><div><span class="card-kicker">11 · Easy</span><h3>Presentations that tell a story</h3></div><span class="recommend-tag">Good place to start</span></div>
+              <p>Give the AI your audience, goal, number of slides, words per slide, visual ideas, speaker notes, and transitions.</p>
+              <div class="tag-list"><span class="tag">Canva Magic Studio</span><span class="tag">Gamma</span><span class="tag">PowerPoint + Copilot</span><span class="tag">Google Slides + Gemini</span><span class="tag">Beautiful.ai</span><span class="tag">Pitch</span><span class="tag">Napkin AI</span></div>
+              <p class="muted-note">A good flow: research → storyline → structure → visuals → human edit → fact-check → rehearse.</p>
+            </article>
+            <article class="card searchable" id="media">
+              <div class="card-head"><div><span class="card-kicker">12 · Easy</span><h3>Images, video &amp; audio</h3></div></div>
+              <p><strong>Image formula:</strong> Subject + Environment + Composition + Style + Lighting + Camera + Mood + Constraints.</p>
+              <div class="tag-list"><span class="tag">Images: Firefly</span><span class="tag">Ideogram</span><span class="tag">Midjourney</span><span class="tag">Photoroom</span><span class="tag">Video: Runway</span><span class="tag">Pika</span><span class="tag">Descript</span><span class="tag">Audio: ElevenLabs</span><span class="tag">Murf</span><span class="tag">Otter</span><span class="tag">Krisp</span></div>
+              <p>Generate short video clips (5–10 seconds) and edit them together. Check licensing before commercial use.</p>
+              <div class="callout caution"><strong>Consent matters:</strong> Never create deepfakes or clone a real person’s voice without clear permission.</div>
+            </article>
+            <article class="card searchable">
+              <div class="card-head"><div><span class="card-kicker">Content repurposing</span><h3>Turn one idea into many formats</h3></div><span class="recommend-tag">Good place to start</span></div>
+              <p>Start with a source you trust, then ask for a newsletter, short social posts, a FAQ, or a short script for a specific audience. Review every version for accuracy, tone, and platform fit.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="work">
+          <div class="section-heading"><div><span class="section-index">Part E · Work smarter</span><h2>Put everyday work on easier rails</h2><p>Make meetings more useful, improve repeatable workflows, and explore data safely.</p></div></div>
+          <div class="grid-2">
+            <article class="card searchable" id="meetings" data-roles="business manager">
+              <div class="card-head"><div><span class="card-kicker">13 · Easy</span><h3>A simple meeting workflow</h3></div><span class="recommend-tag">Good place to start</span></div>
+              <div class="grid-3">
+                <div class="step"><span>Before</span><b>Agenda, objectives, questions, documents</b></div>
+                <div class="step"><span>During</span><b>Notes, decisions, questions, action items</b></div>
+                <div class="step"><span>After</span><b>Summary, owners, deadlines, follow-up</b></div>
+              </div>
+              <p class="muted-note">Explore built-in Microsoft 365 and Google Workspace AI, or tools such as Otter, Fireflies, Fathom, Granola, Zoom AI, and Teams Copilot.</p>
+              <div class="callout caution"><strong>Before recording:</strong> Get consent and follow your organisation’s rules and local law.</div>
+            </article>
+            <article class="card searchable" id="business-map" data-roles="business entrepreneur manager marketer">
+              <div class="card-head"><div><span class="card-kicker">14 · Intermediate</span><h3>Where AI can help in a business</h3></div><span class="recommend-tag">Good place to start</span></div>
+              <div class="table-wrap"><table>
+                <thead><tr><th>Area</th><th>Common use</th><th>Human check</th></tr></thead>
+                <tbody>
+                  <tr><td>Market research</td><td>Search and synthesis</td><td>Verify sources and claims.</td></tr>
+                  <tr><td>Customer support</td><td>Classify requests, draft replies</td><td>Approve before sending.</td></tr>
+                  <tr><td>Sales</td><td>Lead research, outreach drafts</td><td>Check relevance and personalisation.</td></tr>
+                  <tr><td>Marketing</td><td>Ideas, content variations, basic analysis</td><td>Review claims, voice, and rights.</td></tr>
+                  <tr><td>Operations</td><td>SOP drafts and simple automation</td><td>Test workflows; tools include Zapier and Make.</td></tr>
+                  <tr><td>HR / finance / legal</td><td>First drafts only</td><td>Qualified professional review.</td></tr>
+                </tbody>
+              </table></div>
+              <div class="callout warning"><strong>High impact?</strong> Decisions about employment, money, legal matters, or health need qualified human review.</div>
+            </article>
+            <article class="card searchable" id="data-analysis" data-roles="researcher developer business">
+              <div class="card-head"><div><span class="card-kicker">15 · Intermediate</span><h3>Data analysis &amp; SQL</h3></div><span class="recommend-tag">Good place to start</span></div>
+              <p>Use tools like Julius AI, Excel Copilot, or Gemini in Sheets to explore data in plain language. For more control, ask AI for Python or SQL, then run and inspect it yourself.</p>
+              <div class="prompt-box"><div class="prompt-toolbar"><span class="prompt-label">Safe data prompt</span><button class="copy-btn" data-copy-target="prompt-data">Copy prompt</button></div>
+                <pre id="prompt-data">Here is the dataset description: [COLUMNS]. Question: [QUESTION]. First list assumptions and data-quality checks. Then provide code. Explain what each result means and its limitations. Do not state any number unless it comes from the data or executed code.</pre></div>
+            </article>
+            <article class="card searchable" id="productivity-formula">
+              <div class="card-head"><div><span class="card-kicker">A useful mental model</span><h3>What makes AI productivity work?</h3></div></div>
+              <p><strong>Productivity gain ≈ Task selection × Tool selection × Prompt quality × Workflow design × Verification.</strong></p>
+              <p>Match the amount of checking to the stakes: low stakes → quick review; medium → source check and cross-check; high → authoritative sources and expert review.</p>
+              <p class="muted-note">For code: generate → test → run → review. For numbers: calculate independently and confirm.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="build">
+          <div class="section-heading"><div><span class="section-index">Part F · Build</span><h2>Go further with code &amp; automation</h2><p>Optional for everyone else; powerful when a task repeats or needs a custom tool.</p></div></div>
+          <div class="grid-2">
+            <article class="card searchable" id="coding" data-roles="developer">
+              <div class="card-head"><div><span class="card-kicker">16 · Intermediate</span><h3>AI coding helpers</h3></div><span class="recommend-tag">Good place to start</span></div>
+              <p>Explore GitHub Copilot, Cursor, Replit, Lovable, Bolt, or Claude Code. Use version control, write tests, review every change, and never put secrets in prompts.</p>
+              <div class="prompt-box"><div class="prompt-toolbar"><span class="prompt-label">Copy-ready debugging prompt</span><button class="copy-btn" data-copy-target="prompt-debug">Copy prompt</button></div>
+                <pre id="prompt-debug">Error: [ERROR]
+Code: [CODE]
+Expected: [EXPECTED]
+Actual: [ACTUAL]
+What I already tried: [TRIED]
+
+List the 3 most likely causes ranked by probability, how to confirm each, then give the smallest fix. Do not rewrite unrelated code.</pre></div>
+            </article>
+            <article class="card searchable" id="automation">
+              <div class="card-head"><div><span class="card-kicker">17 · Intermediate</span><h3>Automation &amp; agents</h3></div></div>
+              <p>Tools like Zapier, Make, n8n, or Power Automate connect apps: “when this happens → do that.” Add AI to classify an email or draft a response, then pause for approval.</p>
+              <p>An agent can plan steps and use tools toward a goal. More autonomy calls for tighter permissions, human approval before irreversible actions, and good logs.</p>
+            </article>
+            <article class="card searchable" id="deeper-topics">
+              <div class="card-head"><div><span class="card-kicker">18–20 · Advanced</span><h3>RAG, local AI &amp; frameworks</h3></div></div>
+              <p><strong>RAG</strong> retrieves relevant parts of your documents before generating an answer—useful for manuals, course materials, and knowledge bases.</p>
+              <p><strong>Local AI</strong> (such as Ollama or LM Studio) runs on your own computer and can help with privacy or offline use, but needs suitable hardware.</p>
+              <p><strong>Frameworks</strong> such as LangChain, LlamaIndex, CrewAI, and MCP are for people building custom systems. Most non-technical users never need them.</p>
+            </article>
+            <article class="card searchable" id="automation-checks">
+              <div class="card-head"><div><span class="card-kicker">Before you automate</span><h3>Keep the human in control</h3></div></div>
+              <ul class="check-list"><li>What happens if the AI is wrong?</li><li>Does a person need to approve the action?</li><li>Are permissions limited to what is necessary?</li><li>Can you reverse the action?</li><li>Are important actions logged?</li></ul>
+            </article>
+          </div>
+        </section>
+
+        <section id="safe">
+          <div class="section-heading"><div><span class="section-index">Part G · Stay safe</span><h2>Use AI with care and good judgement</h2><p>Protect private information, check the work, and choose tools intentionally.</p></div></div>
+          <div class="grid-2">
+            <article class="card searchable" id="privacy">
+              <div class="card-head"><div><span class="card-kicker">23 · Easy</span><h3>Security &amp; privacy golden rules</h3></div></div>
+              <div class="callout caution"><strong>Never casually paste:</strong> passwords, API keys, confidential customer or patient data, private source code if policy forbids it, or anything you would not want stored on a third-party server.</div>
+              <ul class="check-list">
+                <li>Remove names and IDs; use placeholders.</li><li>For confidential information, prefer approved local or enterprise tools.</li>
+                <li>Follow academic integrity and disclosure rules.</li><li>Check copyright before commercial use.</li>
+                <li>Watch for bias and never make a deepfake without permission.</li>
+              </ul>
+            </article>
+            <article class="card searchable" id="decision-tree">
+              <div class="card-head"><div><span class="card-kicker">26 · Easy</span><h3>The 30-second tool decision tree</h3></div></div>
+              <ol class="check-list">
+                <li><strong>Needs current information?</strong> Use search or a Perplexity-style tool.</li>
+                <li><strong>Depends on your documents?</strong> Use NotebookLM or document AI.</li>
+                <li><strong>Needs code or data?</strong> Use a coding or data environment with AI.</li>
+                <li><strong>Needs image, video, or audio?</strong> Choose a specialised creative tool.</li>
+                <li><strong>Happens repeatedly?</strong> Consider automation.</li>
+              </ol>
+              <div class="callout">If all answers are no, a general assistant is usually enough.</div>
+              <p>Build a small personal stack: one general assistant, one research tool, a coding helper if needed, a document system, a creative tool, an automation platform, and verification habits. No need to install 30 tools.</p>
+            </article>
+            <article class="card searchable" id="checklists">
+              <div class="card-head"><div><span class="card-kicker">27 · Easy</span><h3>Quick checks &amp; common mistakes</h3></div></div>
+              <details class="accordion"><summary>Before you ask</summary><div class="accordion-content"><ul class="check-list"><li>Is the objective exact?</li><li>Is this the right tool?</li><li>Have I included the needed context and output format?</li><li>Is it safe to share?</li></ul></div></details>
+              <details class="accordion"><summary>After the answer</summary><div class="accordion-content"><ul class="check-list"><li>Is it correct and complete?</li><li>Did it follow the instructions?</li><li>Did it invent anything?</li><li>Is the result actually useful?</li></ul></div></details>
+              <details class="accordion"><summary>Common mistakes and easy fixes</summary><div class="accordion-content"><ul class="check-list"><li><strong>Vague prompt:</strong> state goal, audience, format, and constraints.</li><li><strong>No context:</strong> provide background, examples, and source text.</li><li><strong>One giant request:</strong> break it into smaller steps.</li><li><strong>Trusting the first answer:</strong> critique, then verify.</li><li><strong>Pasting secrets:</strong> redact and use placeholders.</li><li><strong>One tool for everything:</strong> match the tool to the task.</li></ul></div></details>
+            </article>
+            <article class="card searchable" id="stakes">
+              <div class="card-head"><div><span class="card-kicker">Match the review to the risk</span><h3>Verification is part of the workflow</h3></div></div>
+              <div class="grid-3">
+                <div class="step"><span>Low stakes</span><b>Quick review</b></div><div class="step"><span>Medium stakes</span><b>Source check + cross-check</b></div>
+                <div class="step"><span>High stakes</span><b>Authoritative source + expert review</b></div>
+              </div>
+              <p>AI is a capable assistant, not a substitute for professional judgement.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="library">
+          <div class="section-heading"><div><span class="section-index">28 · Ready-to-use prompt library</span><h2>Good prompts, ready to make your own</h2><p>Open a prompt, replace the [bracketed] parts, and make it yours.</p></div></div>
+          <div class="grid-2">
+            <article class="searchable">
+              <details class="accordion"><summary>Summarise <span class="tag">Easy</span></summary><div class="accordion-content">
+                <div class="prompt-box"><div class="prompt-toolbar"><span class="prompt-label">Copy-ready template</span><button class="copy-btn" data-copy-target="prompt-summarise">Copy prompt</button></div><pre id="prompt-summarise">Summarise the text below for [AUDIENCE] in [N] bullet points, then list 3 open questions and any claims that need verification.</pre></div>
+              </div></details>
+              <details class="accordion"><summary>Email draft <span class="tag">Easy</span></summary><div class="accordion-content">
+                <div class="prompt-box"><div class="prompt-toolbar"><span class="prompt-label">Copy-ready template</span><button class="copy-btn" data-copy-target="prompt-email">Copy prompt</button></div><pre id="prompt-email">Write a [TONE] email to [RECIPIENT] about [TOPIC]. Goal: [GOAL]. Include a clear call to action and keep it under [N] words.</pre></div>
+              </div></details>
+              <details class="accordion"><summary>Study coach <span class="tag">Easy</span></summary><div class="accordion-content">
+                <div class="prompt-box"><div class="prompt-toolbar"><span class="prompt-label">Copy-ready template</span><button class="copy-btn" data-copy-target="prompt-study">Copy prompt</button></div><pre id="prompt-study">Quiz me on [TOPIC], one question at a time. Start easy, adapt difficulty, wait for my answer, explain mistakes, and finish with a list of weak areas.</pre></div>
+              </div></details>
+              <details class="accordion"><summary>Meeting notes <span class="tag">Intermediate</span></summary><div class="accordion-content">
+                <div class="prompt-box"><div class="prompt-toolbar"><span class="prompt-label">Copy-ready template</span><button class="copy-btn" data-copy-target="prompt-meeting">Copy prompt</button></div><pre id="prompt-meeting">From this transcript, extract: decisions, action items (owner and deadline), open questions, and risks. Then write a 5-line summary and a follow-up email.
+
+[PASTE APPROVED TRANSCRIPT]</pre></div>
+              </div></details>
+            </article>
+            <article class="searchable">
+              <details class="accordion"><summary>Decision matrix <span class="tag">Intermediate</span></summary><div class="accordion-content">
+                <div class="prompt-box"><div class="prompt-toolbar"><span class="prompt-label">Copy-ready template</span><button class="copy-btn" data-copy-target="prompt-decision">Copy prompt</button></div><pre id="prompt-decision">Compare [OPTIONS] using these criteria: [CRITERIA]. Weight each criterion, score each option, show the table, then explain the result and key uncertainties.</pre></div>
+              </div></details>
+              <details class="accordion"><summary>Devil’s advocate <span class="tag">Intermediate</span></summary><div class="accordion-content">
+                <div class="prompt-box"><div class="prompt-toolbar"><span class="prompt-label">Copy-ready template</span><button class="copy-btn" data-copy-target="prompt-devils">Copy prompt</button></div><pre id="prompt-devils">Here is my plan: [PLAN]. Act as a skeptical expert. List the 5 strongest objections, the assumptions most likely to be wrong, and what evidence would change your mind.</pre></div>
+              </div></details>
+              <details class="accordion"><summary>Prompt improver <span class="tag">Advanced</span></summary><div class="accordion-content">
+                <div class="prompt-box"><div class="prompt-toolbar"><span class="prompt-label">Copy-ready template</span><button class="copy-btn" data-copy-target="prompt-improver">Copy prompt</button></div><pre id="prompt-improver">Here is my prompt: [PROMPT]. Ask me up to 5 clarifying questions first. Then rewrite the prompt using Role, Objective, Context, Constraints, and Output format, and explain what you changed.</pre></div>
+              </div></details>
+              <div class="callout mt-3"><strong>Make it yours:</strong> Add the role, context, audience, constraints, and output format that matter to your task.</div>
+            </article>
+          </div>
+        </section>
+
+        <section id="glossary">
+          <div class="section-heading"><div><span class="section-index">29 · Glossary</span><h2>AI terms, in plain English</h2></div></div>
+          <div class="card searchable">
+            <div class="table-wrap mt-0"><table>
+              <thead><tr><th>Term</th><th>Plain-English meaning</th></tr></thead>
+              <tbody>
+                <tr><td>LLM</td><td>Large language model—the text-trained engine behind many chat AIs.</td></tr>
+                <tr><td>Prompt</td><td>The instruction or question you give the AI.</td></tr>
+                <tr><td>Token</td><td>A small chunk of text the model reads or writes—roughly a word or part of one.</td></tr>
+                <tr><td>Context window</td><td>How much text the model can look at in one go, including your prompt, files, and reply.</td></tr>
+                <tr><td>Hallucination</td><td>When AI invents something that sounds true but is not.</td></tr>
+                <tr><td>Grounding</td><td>Tying an answer to real sources you supplied or that were retrieved.</td></tr>
+                <tr><td>Multimodal</td><td>Can handle combinations of text, images, audio, or video.</td></tr>
+                <tr><td>Agent</td><td>A system that can plan steps and use tools toward a goal.</td></tr>
+                <tr><td>RAG</td><td>Retrieve relevant documents first, then generate an answer from them.</td></tr>
+                <tr><td>API</td><td>A way for software to call an AI model programmatically.</td></tr>
+              </tbody>
+            </table></div>
+          </div>
+        </section>
+
+        <section id="action-plan">
+          <div class="section-heading"><div><span class="section-index">30 · Your 30-day action plan</span><h2>Build one good habit at a time</h2><p>Small experiments beat trying to master every tool at once.</p></div></div>
+          <div class="grid-2">
+            <article class="card searchable">
+              <div class="plan-week"><input type="checkbox" aria-label="Mark week 1 complete"><div><strong>Week 1 · Learn one assistant well</strong><p class="muted-note">Practise prompts, files, search, and verification.</p></div></div>
+              <hr class="my-4 border-[var(--line)]">
+              <div class="plan-week"><input type="checkbox" aria-label="Mark week 2 complete"><div><strong>Week 2 · Add research and document tools</strong><p class="muted-note">Practise checking sources and grounding answers.</p></div></div>
+              <hr class="my-4 border-[var(--line)]">
+              <div class="plan-week"><input type="checkbox" aria-label="Mark week 3 complete"><div><strong>Week 3 · Build one workflow</strong><p class="muted-note">Try a prompt chain, a reusable template, or a simple automation.</p></div></div>
+              <hr class="my-4 border-[var(--line)]">
+              <div class="plan-week"><input type="checkbox" aria-label="Mark week 4 complete"><div><strong>Week 4 · Evaluate and share</strong><p class="muted-note">Use a simple rubric, note what works, and share your best prompt.</p></div></div>
+            </article>
+            <article class="card searchable">
+              <div class="card-head"><div><span class="card-kicker">Make it personal</span><h3>My commitments</h3></div></div>
+              <label class="block mb-3 text-sm">My primary assistant <input class="mt-1 w-full rounded-lg border border-[var(--line)] bg-[var(--surface-soft)] px-3 py-2 text-[var(--ink)]" type="text" placeholder="e.g. ChatGPT"></label>
+              <label class="block mb-3 text-sm">Three tasks I want to improve <input class="mt-1 w-full rounded-lg border border-[var(--line)] bg-[var(--surface-soft)] px-3 py-2 text-[var(--ink)]" type="text" placeholder="e.g. meeting notes, weekly report, study quiz"></label>
+              <label class="block mb-3 text-sm">My first workflow to build <input class="mt-1 w-full rounded-lg border border-[var(--line)] bg-[var(--surface-soft)] px-3 py-2 text-[var(--ink)]" type="text" placeholder="One small, repeatable task"></label>
+              <label class="block text-sm">I’ll review my results on <input class="mt-1 w-full rounded-lg border border-[var(--line)] bg-[var(--surface-soft)] px-3 py-2 text-[var(--ink)]" type="date"></label>
+            </article>
+          </div>
+          <div class="callout mt-4"><strong>The one-page philosophy:</strong> Decide what to delegate, which tool to use, how to describe the task, what context to provide, how to structure the workflow, how to evaluate the output, when to verify, when not to use AI, and how to automate responsibly.<br><strong>AI + human judgement + verification = professional AI productivity.</strong></div>
+        </section>
+
+        <footer class="footer flex flex-wrap items-center justify-between gap-3">
+          <span>Thrive Institute · AI Productivity Cheat Sheet (Friendly Edition)</span>
+          <a class="jump-link" href="#top">Back to top ↑</a>
+        </footer>
+      </div>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      const root = document.documentElement;
+      const themeToggle = document.getElementById("theme-toggle");
+      const themeIcon = document.getElementById("theme-icon");
+      const themeLabel = document.getElementById("theme-label");
+
+      function setTheme(theme) {
+        root.dataset.theme = theme;
+        const dark = theme === "dark";
+        themeToggle.setAttribute("aria-label", `Switch to ${dark ? "light" : "dark"} mode`);
+        themeIcon.textContent = dark ? "☀" : "☾";
+        themeLabel.textContent = dark ? "Light mode" : "Dark mode";
+        document.querySelector('meta[name="theme-color"]').content = dark ? "#10131d" : "#f7f8fc";
+        try { localStorage.setItem("thrive-ai-theme", theme); } catch {}
+      }
+      setTheme(root.dataset.theme || "light");
+      themeToggle.addEventListener("click", () => setTheme(root.dataset.theme === "dark" ? "light" : "dark"));
+
+      const roles = {
+        student: { label: "Student or learner", win: "Turn one lecture PDF into a quiz.", target: "tutor", href: "#tutor" },
+        teacher: { label: "Teacher or trainer", win: "Make a 10-slide lesson and a quiz.", target: "presentations", href: "#presentations" },
+        business: { label: "Office / business pro", win: "Turn meeting notes into actions and a follow-up.", target: "meetings", href: "#meetings" },
+        wellness: { label: "Wellness / coaching", win: "Draft a client handout, then review it carefully.", target: "writing", href: "#writing" },
+        entrepreneur: { label: "Entrepreneur / freelancer", win: "Draft enquiry replies with your approval.", target: "business-map", href: "#business-map" },
+        marketer: { label: "Marketer / content creator", win: "Turn one long piece into a week of posts.", target: "writing", href: "#writing" },
+        researcher: { label: "Researcher / analyst", win: "Do deep research, then check every source.", target: "research-tools", href: "#research-tools" },
+        manager: { label: "Manager / leader", win: "Pick three repeated tasks and measure time saved.", target: "business-map", href: "#business-map" },
+        developer: { label: "Developer / data pro", win: "Debug a real bug, then add a test.", target: "coding", href: "#coding" }
+      };
+      const roleResult = document.getElementById("role-result");
+      const roleMessage = document.getElementById("role-message");
+      const roleJump = document.getElementById("role-jump");
+
+      function chooseRole(name) {
+        const role = roles[name];
+        if (!role) return;
+        document.querySelectorAll(".role-btn").forEach((button) => {
+          button.setAttribute("aria-pressed", String(button.dataset.role === name));
+        });
+        document.querySelectorAll(".is-recommended").forEach((element) => element.classList.remove("is-recommended"));
+        const target = document.getElementById(role.target);
+        if (target) target.classList.add("is-recommended");
+        roleMessage.innerHTML = `<strong>${role.label}:</strong> ${role.win}`;
+        roleJump.href = role.href;
+        roleResult.classList.add("visible");
+      }
+      document.querySelectorAll(".role-btn").forEach((button) => button.addEventListener("click", () => chooseRole(button.dataset.role)));
+      document.querySelectorAll("[data-pick-role]").forEach((row) => {
+        row.tabIndex = 0;
+        row.setAttribute("role", "button");
+        row.setAttribute("aria-label", `Show ${roles[row.dataset.pickRole].label} quick win`);
+        const activate = () => chooseRole(row.dataset.pickRole);
+        row.addEventListener("click", activate);
+        row.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") { event.preventDefault(); activate(); }
+        });
+      });
+
+      const search = document.getElementById("guide-search");
+      const count = document.getElementById("search-count");
+      const searchable = [...document.querySelectorAll(".searchable")];
+      search.addEventListener("input", () => {
+        const query = search.value.trim().toLocaleLowerCase();
+        let visible = 0;
+        searchable.forEach((item) => {
+          const matches = !query || item.textContent.toLocaleLowerCase().includes(query);
+          item.classList.toggle("no-match", !matches);
+          if (matches) visible += 1;
+        });
+        count.textContent = query ? `${visible} matching ${visible === 1 ? "result" : "results"}` : "";
+      });
+
+      const toast = document.getElementById("toast");
+      let toastTimeout;
+      function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add("show");
+        window.clearTimeout(toastTimeout);
+        toastTimeout = window.setTimeout(() => toast.classList.remove("show"), 1900);
+      }
+      async function copyText(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+          try {
+            await navigator.clipboard.writeText(text);
+            return;
+          } catch {}
+        }
+        const helper = document.createElement("textarea");
+        helper.value = text;
+        helper.setAttribute("readonly", "");
+        helper.style.position = "fixed";
+        helper.style.opacity = "0";
+        document.body.append(helper);
+        helper.select();
+        const copied = document.execCommand("copy");
+        helper.remove();
+        if (!copied) throw new Error("Clipboard copy was not permitted.");
+      }
+      document.querySelectorAll("[data-copy-target]").forEach((button) => {
+        button.addEventListener("click", async () => {
+          const target = document.getElementById(button.dataset.copyTarget);
+          if (!target) {
+            showToast("This prompt could not be found.");
+            return;
+          }
+          try {
+            await copyText(target.textContent);
+            const originalLabel = button.dataset.originalLabel || button.textContent;
+            button.dataset.originalLabel = originalLabel;
+            button.textContent = "Copied!";
+            button.classList.add("copied");
+            showToast("Prompt copied to clipboard");
+            window.setTimeout(() => {
+              button.textContent = originalLabel;
+              button.classList.remove("copied");
+            }, 1700);
+          } catch {
+            showToast("Copy failed. Please select and copy the prompt.");
+          }
+        });
+      });
+
+      const links = [...document.querySelectorAll('.nav-link, .mobile-nav a')];
+      const sections = [...document.querySelectorAll("main section[id]")];
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            links.forEach((link) => link.classList.toggle("active", link.getAttribute("href") === `#${entry.target.id}`));
+          });
+        }, { rootMargin: "-20% 0px -70% 0px" });
+        sections.forEach((section) => observer.observe(section));
+      }
+    })();
+  </script>
+</body>
+</html>
